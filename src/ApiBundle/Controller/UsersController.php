@@ -20,7 +20,7 @@ class UsersController extends FOSRestController
      */
     public function getUsersAction()
     {
-        $users = $this->getDoctrine()->getRepository('ApiBundle\Entity\User\User')->findAll();
+        $users = $this->getDoctrine()->getRepository('ApiBundle\Entity\HappyUser')->findAll();
 
         $view = $this->view($users, 200)
             ->setTemplate("ApiBundle:User:users.html.twig")
@@ -78,6 +78,7 @@ class UsersController extends FOSRestController
 
     /**
      * Json put
+     *
      * @Put("/users/{user}, requirements={"user" = "\d+"})
      */
     public function putUsersAction(Request $request, User $user)
@@ -99,7 +100,7 @@ class UsersController extends FOSRestController
             throw new SymfonyHttpUnprocessableEntity("constant error codes here, along with validation errors");
         }
 
-        $em->getRepository('ApiBundle\Entity\User')->save($user);
+        $em->getRepository('ApiBundle\Entity\HappyUser')->save($user);
 
         return $user;
     }
