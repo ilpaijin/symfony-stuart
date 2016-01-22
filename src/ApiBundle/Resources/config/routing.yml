@@ -1,0 +1,5 @@
+users:
+    type: rest
+    resource: ApiBundle\Controller\UsersController
+    prefix: /v1
+    name_prefix: api_1_

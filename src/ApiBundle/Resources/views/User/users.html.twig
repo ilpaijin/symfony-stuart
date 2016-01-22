@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>User</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <p>{{users|length}}</p>
+        {% for user in users %}
+            <p>id #{{user.id}}: {{user.username_canonical}}</p>
+        {% endfor %}
+    </body>
+</html>
