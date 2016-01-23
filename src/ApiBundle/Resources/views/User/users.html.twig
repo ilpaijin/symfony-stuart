@@ -8,7 +8,7 @@
     <body>
         <p>{{users|length}}</p>
         {% for user in users %}
-            <p>id #{{user.id}}: {{user.username_canonical}}</p>
+            <p>id #{{user.getId()}}: {{user.getUsernameCanonical()}}</p>
         {% endfor %}
     </body>
 </html>

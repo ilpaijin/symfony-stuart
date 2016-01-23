@@ -6,14 +6,14 @@ use ApiBundle\Entity\UserInterface;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
- * @Entity
- *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="username_UNIQUE", columns={"username"})
- * @ORM\UniqueConstraint(name="username_canonical_UNIQUE", columns={"username_canonical"})
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
- * @DiscriminatorMap({"happy" = "HappyUser"})
+ * @ORM\Entity
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="username_UNIQUE", columns={"username"})})
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"happy_user" = "ApiBundle\Entity\HappyUser"})
  */
 abstract class User implements UserInterface
 {
@@ -28,6 +28,7 @@ abstract class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(name="username", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
      */
     protected $username;
 
@@ -68,8 +69,14 @@ abstract class User implements UserInterface
     protected $lastname;
 
     /**
+     * @var string
+     * @ORM\Column(name="username_canonical", type="string", length=255, nullable=true)
+     */
+    protected $username_canonical;
+
+    /**
      * @var Phone
-     * @OneToMany(targetEntity="Phone", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="ApiBundle\Entity\Phone", mappedBy="user")
      *
      */
     protected $phones;
@@ -153,5 +160,53 @@ abstract class User implements UserInterface
     public function getLastname()
     {
         return $this->lastname;
+    }
+
+    /**
+     * Gets the value of username_canonical.
+     *
+     * @return string
+     */
+    public function getUsernameCanonical()
+    {
+        return $this->username_canonical;
+    }
+
+    /**
+     * Sets the value of username_canonical.
+     *
+     * @param string $username_canonical the username canonical
+     *
+     * @return self
+     */
+    public function setUsernameCanonical($username_canonical)
+    {
+        $this->username_canonical = $username_canonical;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of phones.
+     *
+     * @return Phone
+     */
+    public function getPhones()
+    {
+        return $this->phones;
+    }
+
+    /**
+     * Sets the value of phones.
+     *
+     * @param Phone $phones the phones
+     *
+     * @return self
+     */
+    public function setPhones(Phone $phones)
+    {
+        $this->phones = $phones;
+
+        return $this;
     }
 }

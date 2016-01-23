@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Entity\User\User;
 use ApiBundle\Entity\HappyUser;
 
 use FOS\RestBundle\Controller\FOSRestController;
@@ -13,8 +14,9 @@ use FOS\RestBundle\Controller\Annotations\Delete;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-use Symfony\Component\HttpKernel\Exception\SymfonyHttpUnprocessableEntity;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class UsersController extends FOSRestController
 {
@@ -33,7 +35,7 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * @Get("/users/{user}, requirements={"user" = "\d+"})
+     * @Get("/users/{user}", requirements={"user" = "\d+"})
      */
     public function getUserAction(User $user)
     {
@@ -66,7 +68,7 @@ class UsersController extends FOSRestController
                 $em->getConnection()->commit();
             } catch (\Exception $e) {
                 //or conflictException
-                throw new Exception\UnprocessableEntityHttpException($e->getMessage());
+                throw new UnprocessableEntityHttpException($e->getMessage());
                 $em->getConnection()->rollBack();
                 $em->close();
             }
@@ -82,34 +84,35 @@ class UsersController extends FOSRestController
     /**
      * Json put
      *
-     * @Put("/users/{user}, requirements={"user" = "\d+"})
+     * @Put("/users/{user}", requirements={"user" = "\d+"})
      */
-    public function putUsersAction(Request $request, User $user)
+    public function putUsersAction(Request $request, HappyUser $user)
     {
-        // probably handled by paramConverter here above
-        if (!$user = $em->getRepository('ApiBundle\Entity\User')->find($id)) {
-            throw new SymfonyHttpNotFoundException("User not found");
-        }
-
-        $user = $this->get('serializer')->deserialize(
+        $userData = $this->get('serializer')->deserialize(
             $request->getContent(),
             'ApiBundle\Entity\HappyUser',
             'json'
         );
 
-        $violations = $this->get('validator')->validate($user);
+        $violations = $this->get('validator')->validate($userData);
 
         if (count($violations)) {
-            throw new SymfonyHttpUnprocessableEntity("constant error codes here, along with validation errors");
+            throw new UnprocessableEntityHttpException("constant error codes here, along with validation errors");
         }
 
-        $em->getRepository('ApiBundle\Entity\HappyUser')->save($user);
+        $user->setUsername($userData->getUsername());
 
-        return $user;
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+
+        $view = $this->view($user, 201);
+
+        return $this->handleView($view);
     }
 
     /**
-     * @Delete("/users/{user}, requirements={"user" = "\d+"})
+     * @Delete("/users/{user}", requirements={"user" = "\d+"})
      */
     public function deleteUsersAction(Request $request, User $user)
     {

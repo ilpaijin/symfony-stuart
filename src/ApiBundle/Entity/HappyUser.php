@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiBundle\Entity\User\User;
 
 /**
- * @Entity
+ * @ORM\Entity(repositoryClass="HappyUserRepository")
  */
 class HappyUser extends User
 {
-
+    /**
+     * @var int
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     */
+    protected $id;
 }
