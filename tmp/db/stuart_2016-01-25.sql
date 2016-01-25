@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.26-log)
 # Database: stuart
-# Generation Time: 2016-01-22 15:33:10 +0000
+# Generation Time: 2016-01-25 10:24:47 +0000
 # ************************************************************
 
 
@@ -50,6 +50,7 @@ DROP TABLE IF EXISTS `phones`;
 CREATE TABLE `phones` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `phone_number` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -58,9 +59,9 @@ CREATE TABLE `phones` (
 LOCK TABLES `phones` WRITE;
 /*!40000 ALTER TABLE `phones` DISABLE KEYS */;
 
-INSERT INTO `phones` (`id`, `user_id`)
+INSERT INTO `phones` (`id`, `user_id`, `phone_number`)
 VALUES
-	(1,1);
+	(1,1,'123');
 
 /*!40000 ALTER TABLE `phones` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -73,6 +74,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(40) DEFAULT NULL,
   `username` varchar(255) NOT NULL DEFAULT '',
   `enabled` bit(1) NOT NULL,
   `salt` varchar(255) NOT NULL DEFAULT '',
@@ -89,9 +91,9 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `user` (`id`, `username`, `enabled`, `salt`, `password`, `date_of_birth`, `firstname`, `lastname`, `username_canonical`)
+INSERT INTO `user` (`id`, `type`, `username`, `enabled`, `salt`, `password`, `date_of_birth`, `firstname`, `lastname`, `username_canonical`)
 VALUES
-	(1,'abc',10000000,'www','aaa',NULL,NULL,NULL,'abc');
+	(1,'happy_user','Pets & Co.',00000000,'123','qwe',NULL,NULL,NULL,'petsco');
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
